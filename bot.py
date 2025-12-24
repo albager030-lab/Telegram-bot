@@ -1,28 +1,22 @@
-from telegram import Update
-from telegram.ext import (
-    ApplicationBuilder,
-    CommandHandler,
-    MessageHandler,
-    ContextTypes,
-    filters
-)
+import os
+import telebot
 
-TOKEN = "8249504920:AAFYqrRJKIL3rLcTERR4mNuXWurjHpcrQvc"
+# جلب التوكن من متغيرات البيئة
+BOT_TOKEN = os.getenv("8249504920:AAFYqrRJKIL3rLcTERR4mNuXWurjHpcrQvc")
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("أهلًا 👋 البوت يعمل. أرسل أي رسالة.")
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN غير موجود في متغيرات البيئة")
 
-async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("✅ البوت يعمل الآن بدون مشاكل")
+bot = telebot.TeleBot(BOT_TOKEN)
 
-async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(f"أنت قلت: {update.message.text}")
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.reply_to(message, "✅ البوت يعمل بنجاح 24 ساعة!")
 
-app = ApplicationBuilder().token(TOKEN).build()
+@bot.message_handler(func=lambda message: True)
+def echo(message):
+    bot.reply_to(message, message.text)
 
-app.add_handler(CommandHandler("start", start))
-app.add_handler(CommandHandler("status", status))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, reply))
+print("🤖 Bot is running...")
 
-print("البوت يعمل الآن...")
-app.run_polling()
+bot.infinity_polling()
