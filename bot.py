@@ -2,7 +2,7 @@ import os
 import telebot
 
 # جلب التوكن من متغيرات البيئة
-BOT_TOKEN = os.getenv("")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN غير موجود في متغيرات البيئة")
@@ -20,4 +20,5 @@ def echo(message):
 print("🤖 Bot is running...")
 
 bot.infinity_polling()
+
 
